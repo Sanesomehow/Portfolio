@@ -6,6 +6,8 @@
 
 html,
 body {
+  /*add a smooth scroll effect to the page*/
+  scroll-behavior: smooth;
   font-family: "Montserrat", sans-serif;
   height: 100%;
   margin: 0;
@@ -122,4 +124,14 @@ a:hover {
 img.socialIcon {
   height: 30px;
   width: 30px;
+}
+
+/*add a slide in animation*/
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
