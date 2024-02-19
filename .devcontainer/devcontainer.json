@@ -23,13 +23,41 @@
         "esbenp.prettier-vscode",
         "GitHub.copilot",
         "ms-vscode.azure-account",
-        "ms-azuretools.vscode-azurestaticwebapps"
+        "ms-azuretools.vscode-azurestaticwebapps",
+        "oderwat.indent-rainbow"
       ],
       "settings": {
         "emmet.includeLanguages": {
           "javascript": "javascriptreact"
         },
-        "emmet.triggerExpansionOnTab": true
+        "emmet.triggerExpansionOnTab": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": true
+        },
+        "editor.rulers": [80, 120],
+        "editor.tabSize": 2,
+        "editor.wordWrap": "on",
+        "editor.wordWrapColumn": 80,
+        "eslint.run": "onSave",
+        "eslint.format.enable": true,
+        "eslint.lintTask.enable": true,
+        "eslint.codeAction.showDocumentation": {
+          "enable": true
+        },
+        "files.autoSave": "onWindowChange",
+        "files.autoSaveDelay": 1000,
+        "files.exclude": {
+          "**/.git": true,
+          "**/.DS_Store": true,
+          "**/.vscode": true,
+          "**/node_modules": true
+        },
+        "files.associations": {
+          "*.js": "javascriptreact"
+        },
+        "javascript.preferences.quoteStyle": "single"
       }
     }
   },
