@@ -13,7 +13,7 @@ import PropTypes from "prop-types";
  * Home background image
  *
  * Below is a sample image. Upload the image of your choice into the "images"
- * directory and import here for use. Then, set imageAltText to string that 
+ * directory and import here for use. Then, set imageAltText to string that
  * represents what you see in that image.
  *
  *
@@ -32,8 +32,18 @@ const Home = ({ name, title }) => {
         <h1>{name}</h1>
         <h2>{title}</h2>
       </div>
-      <div style={{ position: "absolute", bottom: "3rem", left: "50%" }}>
-        <img src={arrowSvg} style={{ height: "3rem", width: "3rem" }} alt={imageAltText} />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "3rem",
+          left: "50%",
+        }}
+      >
+        <img
+          src={arrowSvg}
+          style={{ height: "3rem", width: "3rem", animation: "1s ease-out 0s 1 bounce" }}
+          alt={imageAltText}
+        />
       </div>
     </section>
   );
