@@ -19,9 +19,6 @@ import React from "react";
  * Need an image? Check out https://unsplash.com to download a photo you
  * freely use on your site.
  */
-import image from "../images/design-desk.jpeg";
-
-const imageAltText = "desktop with books and laptop";
 
 /**
  * Project list
@@ -61,18 +58,6 @@ const Portfolio = () => {
     <section className="padding" id="portfolio">
       <h2 style={{ textAlign: "center" }}>Portfolio</h2>
       <div style={{ display: "flex", flexDirection: "row", paddingTop: "3rem" }}>
-        <div style={{ maxWidth: "40%", alignSelf: "center" }}>
-          <img
-            src={image}
-            style={{
-              height: "90%",
-              width: "100%",
-              objectFit: "cover",
-              animation: "1s ease-out 0s 1 slideIn",
-            }}
-            alt={imageAltText}
-          />
-        </div>
         <div className="container">
           {projectList.map((project) => (
             <div className="box" key={project.title}>
