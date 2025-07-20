@@ -1,103 +1,247 @@
-import Image from "next/image";
+"use client";
+
+import { Title } from "@/components/Title";
+import { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Card } from "@/components/Card";
+import { AnimatePresence, motion } from "framer-motion";
+import { LampGraphics } from "@/components/LampGraphics";
+import { useScreenStore } from "@/app/store";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [lightPhase, setLightPhase] = useState("off");
+  const [showContent, setShowContent] = useState(false);
+  const mainRef = useRef<HTMLDivElement>(null);
+  const projectsRef = useRef(null);
+  const [activeSection, setActiveSection] = useState("s1");
+  const { screen, setScreen } = useScreenStore();
+  const [isClient, setIsClient] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const cards = [
+    { id: 1, title: "Project One", content: "Description One" },
+    { id: 2, title: "Project Two", content: "Description Two" },
+    { id: 3, title: "Project Three", content: "Description Three" },
+  ];
+  const [projectIndex, setProjectIndex] = useState(0);
+
+  const nextCard = () => {
+    setProjectIndex((prev) => (prev + 1) % cards.length);
+  };
+
+  const prevCard = () => {
+    setProjectIndex((prev) => (prev - 1 + cards.length) % cards.length);
+  };
+
+  useEffect(() => {
+    // Set client-side flag
+    setIsClient(true);
+    
+    const updateScreen = () => {
+      if (window.innerWidth < 768) {
+        setScreen("mobile");
+      } else if (window.innerWidth >= 768 && window.innerWidth < 1200) {
+        setScreen("tablet");
+      } else {
+        setScreen("desktop");
+      }
+    };
+    
+    // Run immediately
+    updateScreen();
+    
+    // Add resize listener
+    window.addEventListener("resize", updateScreen);
+
+    const handleScroll = () => {
+      const section1 = document.getElementById("s1");
+      const section2 = document.getElementById("s2");
+
+      const section1Top = section1?.getBoundingClientRect().top ?? 0;
+      const section2Top = section2?.getBoundingClientRect().top ?? 0;
+
+      if (Math.abs(section1Top) < Math.abs(section2Top)) {
+        setActiveSection("s1");
+      } else {
+        setActiveSection("s2");
+      }
+    };
+
+    const main = mainRef.current;
+    main?.addEventListener("scroll", handleScroll);
+    
+    return () => {
+      window.removeEventListener("resize", updateScreen);
+      main?.removeEventListener("scroll", handleScroll);
+    };
+  }, [setScreen]);
+
+  // Show content immediately on mobile since there's no lamp animation
+  useEffect(() => {
+    if (isClient && screen === "mobile") {
+      setShowContent(true);
+    }
+  }, [isClient, screen]);
+
+  // const getLightOpacity = () => {
+  //   switch (lightPhase) {
+  //     case "off":
+  //       return "opacity-0";
+  //     case "on":
+  //       return "opacity-100";
+  //     case "final":
+  //       return "opacity-80";
+  //     default:
+  //       return "opacity-0";
+  //   }
+  // };
+
+  // const getTrapezoidOpacity = () => {
+  //   switch (lightPhase) {
+  //     case "off":
+  //       return "opacity-0";
+  //     case "on":
+  //       return "opacity-60";
+  //     case "final":
+  //       return "opacity-40";
+  //     default:
+  //       return "opacity-0";
+  //   }
+  // };
+
+  // const getEllipseOpacity = () => {
+  //   switch (lightPhase) {
+  //     case "off":
+  //       return "opacity-0";
+  //     case "on":
+  //       return "opacity-60";
+  //     case "final":
+  //       return "opacity-40";
+  //     default:
+  //       return "opacity-0";
+  //   }
+  // };
+
+  return (
+    <div
+      id="main"
+      ref={mainRef}
+      className={`w-screen h-screen snap-y snap-mandatory overflow-scroll scroll-smooth transition-colors duration-700 
+        ${activeSection === "s1" ? "bg-deep-black" : "bg-rich-charcoal"}
+      `}
+    >
+      <section
+        id="s1"
+        className={`relative h-screen snap-start max-w-screen overflow-x-hidden transition-opacity duration-700
+     ${activeSection === "s2" ? "opacity-0" : "opacity-100"}
+      `}
+      >
+        {/* Lamp Image - only show after loading */}
+        {/* <img
+          src="svgviewer-output.svg"
+          alt="lamp"
+          className={`absolute -top-70 right-32 w-120  transition-opacity duration-1000 `}
+        /> */}
+
+        {/* Light bulb glow - blinks according to sequence */}
+        {/* <div
+          className={`absolute transition-opacity duration-500 ${getLightOpacity()}`}
+          style={{
+            width: "235px",
+            height: "29px",
+            top: "19%",
+            right: "8.5%",
+            transform: "translateX(-50%)",
+            borderRadius: "50% / 50%",
+            background:
+              "radial-gradient(ellipse at center, rgba(255, 255, 0, 0.9) 0%, rgba(255, 200, 0, 0.5) 60%, transparent 100%)",
+            boxShadow: "0 40px 60px 20px rgba(255, 255, 0, 0.4)",
+            filter: "blur(1px)",
+          }}
+        /> */}
+
+        {/* Yellow light gradient (trapezoid) - blinks according to sequence */}
+        {/* <div className="absolute top-0 right-0 w-full h-full pointer-events-none">
+          <div
+            className={`absolute w-250 h-96 transition-opacity duration-500 ${getTrapezoidOpacity()}`}
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(255, 255, 150, 0.4) 0%, rgba(255, 255, 150, 0.1) 80%, transparent 100%)",
+              clipPath: "polygon(40% 0%, 62% 0%, 80% 100%, 0% 210%)",
+              top: "20.2%",
+              left: "42.7%",
+              filter: "blur(2px)",
+            }}
+          />
+        </div> */}
+
+        {/* Bottom ellipse light - blinks according to sequence */}
+        {/* <div
+          className={`absolute pointer-events-none transition-opacity duration-500 ${getEllipseOpacity()}`}
+          style={{
+            bottom: "25%",
+            right: "11%",
+            width: "400px",
+            height: "80px",
+            background:
+              "radial-gradient(ellipse at center, rgba(255, 220, 100, 0.4) 0%, rgba(255, 200, 50, 0.2) 50%, rgba(0, 0, 0, 0.1) 70%, transparent 100%)",
+            borderRadius: "50%",
+            filter: "blur(4px)",
+            transform: "scaleX(1.5)",
+          }}
+        /> */}
+        {/* Only render LampGraphics on non-mobile devices and after client-side hydration */}
+        {isClient && screen !== "mobile" && (
+          <LampGraphics
+            showContent={showContent}
+            setShowContent={setShowContent}
+          />
+        )}
+
+        {/* Title - only show after loading */}
+        <div
+          className={`transition-opacity duration-1000 ${
+            showContent ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <Title />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+      <section
+        id="s2"
+        className="w-screen h-screen snap-start flex flex-col items-center"
+      >
+        <h1 className="text-5xl text-center text-secondary font-playfair p-10">
+          Projects
+        </h1>
+        <div className="flex w-screen justify-between">
+          <button
+            className="text-card-gray hover:text-shadow-lg text-shadow-lg/40 text-shadow-hover hover:text-shadow-cta text-[10rem] hover:scale-110 hover:opacity-70 transition-all duration-500"
+            onClick={prevCard}
+          >
+            ❮
+          </button>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={cards[projectIndex].id}
+              initial={{ opacity: 0, scale: 0.8, translateY: 0 }}
+              animate={{ opacity: 1, scale: 1, translateY: 0 }}
+              exit={{ opacity: 0, scale: 0.8, translateY: 200 }}
+              transition={{ duration: 0.4 }}
+              className="p-5"
+            >
+              <Card />
+            </motion.div>
+          </AnimatePresence>
+
+          <button
+            className="text-card-gray hover:text-shadow-lg text-shadow-lg/40 text-shadow-hover hover:text-shadow-cta text-[10rem] hover:scale-110 hover:opacity-70 transition-all duration-500"
+            onClick={nextCard}
+          >
+            ❯
+          </button>
+        </div>
+      </section>
     </div>
   );
 }
